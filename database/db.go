@@ -13,6 +13,8 @@ type DB struct {
 	Mongo *mongo.Client
 }
 
+var Databse = DB{}
+
 func Init() DB {
 
 	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017/restful"))
@@ -31,8 +33,8 @@ func Init() DB {
 
 	defer client.Disconnect(ctx)
 
-	return DB{
-		Mongo: client,
-	}
+	Databse.Mongo = client
+
+	return Databse
 
 }
