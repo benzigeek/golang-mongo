@@ -3,37 +3,24 @@ package database
 import (
 	"context"
 	"log"
-	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type DB struct {
-	Mongo *mongo.Client
-}
+var Databse *mongo.Client
 
-var Databse = DB{}
+func Init() *mongo.Client {
 
-func Init() DB {
+	clientOpts := options.Client().ApplyURI("mongodb://localhost:27017")
 
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017/restful"))
+	client, err := mongo.Connect(context.TODO(), clientOpts)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-
-	err = client.Connect(ctx)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer client.Disconnect(ctx)
-
-	Databse.Mongo = client
+	Databse := client
 
 	return Databse
 
